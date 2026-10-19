@@ -6,12 +6,15 @@ import bcrypt from 'bcryptjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DATA_DIR = path.join(__dirname, 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
+const DATA_DIR = process.env.VERCEL ? '/tmp' : path.join(__dirname, 'data');
+const DB_FILE = process.env.VERCEL ? '/tmp/db.json' : path.join(DATA_DIR, 'db.json');
+const BUNDLED_DB = path.join(__dirname, 'data', 'db.json');
 
 // Ensure directory exists
-if (!fs.existsSync(DATA_DIR)) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!process.env.VERCEL && !fs.existsSync(DATA_DIR)) {
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  } catch (e) {}
 }
 
 // Initial Seed Data
@@ -737,9 +740,17 @@ class Database {
   }
 
   init() {
+    if (process.env.VERCEL && !fs.existsSync(DB_FILE) && fs.existsSync(BUNDLED_DB)) {
+      try {
+        fs.copyFileSync(BUNDLED_DB, DB_FILE);
+      } catch (e) {}
+    }
+
     if (!fs.existsSync(DB_FILE)) {
       const initialData = getInitialSeed();
-      fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2), 'utf8');
+      try {
+        fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2), 'utf8');
+      } catch (e) {}
       this.data = initialData;
     } else {
       try {
@@ -748,7 +759,9 @@ class Database {
       } catch (err) {
         console.error('Error reading db.json, re-initializing seed:', err);
         this.data = getInitialSeed();
-        fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf8');
+        try {
+          fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf8');
+        } catch (e) {}
       }
     }
   }
@@ -757,7 +770,7 @@ class Database {
     try {
       fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf8');
     } catch (err) {
-      console.error('Error saving db.json:', err);
+      console.warn('Warning: Could not save db.json:', err.message);
     }
   }
 

@@ -29,7 +29,12 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Static file serving for uploads
-const UPLOADS_DIR = path.join(__dirname, '..', 'uploads');
+const UPLOADS_DIR = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(UPLOADS_DIR)) {
+  try {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  } catch (e) {}
+}
 app.use('/uploads', express.static(UPLOADS_DIR));
 
 // API Routes
@@ -47,7 +52,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/testimonials', testimonialsRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({
     status: 'online',
     timestamp: new Date().toISOString(),

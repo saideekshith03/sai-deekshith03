@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 // Import Routes
@@ -54,6 +55,16 @@ app.get('/api/health', (req, res) => {
     service: 'CHINNI DIGITALS API Engine'
   });
 });
+
+// Production: Serve React Client Build & SPA Fallback
+const CLIENT_DIST = path.join(__dirname, '..', 'client', 'dist');
+if (fs.existsSync(CLIENT_DIST)) {
+  app.use(express.static(CLIENT_DIST));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(CLIENT_DIST, 'index.html'));
+  });
+}
 
 // Global Error Handler
 app.use((err, req, res, next) => {

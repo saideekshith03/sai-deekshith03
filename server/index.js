@@ -60,9 +60,11 @@ app.get('/api/health', (req, res) => {
 const CLIENT_DIST = path.join(__dirname, '..', 'client', 'dist');
 if (fs.existsSync(CLIENT_DIST)) {
   app.use(express.static(CLIENT_DIST));
-  app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api')) return next();
-    res.sendFile(path.join(CLIENT_DIST, 'index.html'));
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+      return res.sendFile(path.join(CLIENT_DIST, 'index.html'));
+    }
+    next();
   });
 }
 

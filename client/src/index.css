@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Outfit', sans-serif;
+    --font-heading: 'Syne', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #0A0A0C;
+    color: #F8FAFC;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-heading {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f1015;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2b36;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e50914;
+}
+
+/* Shutter flash animation */
+@keyframes cameraFlash {
+  0% { opacity: 0; }
+  15% { opacity: 0.95; }
+  100% { opacity: 0; }
+}
+
+.camera-flash-active {
+  animation: cameraFlash 0.5s ease-out forwards;
+}
+
+/* Film strip marquee */
+@keyframes filmScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-film-scroll {
+  display: flex;
+  width: max-content;
+  animation: filmScroll 35s linear infinite;
+}
+.animate-film-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* Lens pulse & glow */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 25px -5px rgba(229, 9, 20, 0.4), 0 0 10px -2px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 45px 5px rgba(229, 9, 20, 0.7), 0 0 20px 2px rgba(245, 158, 11, 0.4);
+  }
+}
+
+.lens-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+
+/* Viewfinder corner brackets */
+.viewfinder-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(229, 9, 20, 0.8);
+  pointer-events: none;
+}
+.viewfinder-tl {
+  top: 16px;
+  left: 16px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.viewfinder-tr {
+  top: 16px;
+  right: 16px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.viewfinder-bl {
+  bottom: 16px;
+  left: 16px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.viewfinder-br {
+  bottom: 16px;
+  right: 16px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* Floating animation */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(1deg); }
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: floatSlow 7s ease-in-out infinite 2s;
+}
+
+/* Glassmorphism */
+.glass-panel {
+  background: rgba(18, 18, 24, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  background: rgba(26, 26, 36, 0.85);
+  border-color: rgba(229, 9, 20, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(229, 9, 20, 0.25);
+}
+
+/* Badge pulse */
+@keyframes recordBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(0.9); }
+}
+
+.animate-record {
+  animation: recordBlink 1.4s infinite ease-in-out;
+}

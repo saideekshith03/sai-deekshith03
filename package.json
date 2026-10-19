@@ -1,0 +1,30 @@
+{
+  "name": "chinni-digitals",
+  "version": "1.0.0",
+  "description": "CHINNI DIGITALS Photo Studio & Cinematic Videography Platform",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "server": "node server/index.js",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"SERVER,CLIENT\" -c \"red.bold,cyan.bold\" \"npm run server\" \"npm run client\"",
+    "build": "npm --prefix client run build"
+  },
+  "keywords": [
+    "photo-studio",
+    "photography",
+    "videography",
+    "wedding-photography"
+  ],
+  "author": "CHINNI DIGITALS",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "concurrently": "^10.0.6",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.4.0"
+  }
+}
